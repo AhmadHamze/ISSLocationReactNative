@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "FirstReactNative",
-    "slug": "FirstReactNative",
+    "name": "LocateISSReactNative",
+    "slug": "LocateISSReactNative",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
