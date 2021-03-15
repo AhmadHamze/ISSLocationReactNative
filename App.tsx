@@ -1,32 +1,45 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
+import { Header } from 'react-native/Libraries/NewAppScreen';
 import { getIss } from './api/iss_api';
 
 // Transforming this function into an async function gives an error!
 export default function App() {
   
-  const [isDisplayed, setIsDisplayed] = useState(false);
+  //const [isDisplayed, setIsDisplayed] = useState(false);
   const [lat, setLat] = useState(0);
   const [long, setLong] = useState(0);
+  const getData = () => {
+    //setIsDisplayed(true);
+    getIss()
+    .then(data => {
+      setLat(data.lat);
+      setLong(data.long);
+    })
+    .catch(err => console.error(err));
+  }
+  useEffect(() => {
+    setInterval(getData, 1000);
+  })
   
   return (
     <View style={styles.container}>
-      <Text>Click the button to view the ISS location</Text>
+      <Header>Welcome to the ISS location app</Header>
+      
       <StatusBar style="auto" />
-      <Button
-        onPress={() => {
-          setIsDisplayed(true);
-          getIss()
-          .then(data => {
-            setLat(data.lat);
-            setLong(data.long);
-          })
-          .catch(err => console.error(err));
-        }}
-        title={isDisplayed? `latitude: ${lat}, longitude: ${long}` : "click to see the ISS location"}
-        >
-      </Button>
+      <Text>
+        Latitude
+      </Text>
+      <Text>
+        {lat}
+      </Text>
+      <Text>
+        Longitude
+      </Text>
+      <Text>
+        {long}
+      </Text>
     </View>
   );
 }
