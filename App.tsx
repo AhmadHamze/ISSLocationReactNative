@@ -3,29 +3,29 @@ import React, { useState } from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
 import { getIss } from './api/iss_api';
 
-
-//Handling the promise using then, not sure if await can be used here, but this works!
-const promise:Promise<number[]> = getIss();
-let latitude:number;
-let longitude:number;
-
-// 'data' is the array containing the latitude and the longitude returned by the 'getIss' function
-promise.then((data) => {
-  [latitude, longitude] = data;
-})
-.catch((err) => console.error());
-
 // Transforming this function into an async function gives an error!
 export default function App() {
+  
   const [isDisplayed, setIsDisplayed] = useState(false);
+  const [lat, setLat] = useState(0);
+  const [long, setLong] = useState(0);
+  
   return (
     <View style={styles.container}>
       <Text>Click the button to view the ISS location</Text>
       <StatusBar style="auto" />
       <Button
-        onPress={() => setIsDisplayed(true)}
-        disabled={isDisplayed}
-        title={isDisplayed? `latitude: ${latitude}, longitude: ${longitude}` : "click to see the ISS location"}>
+        onPress={() => {
+          setIsDisplayed(true);
+          getIss()
+          .then(data => {
+            setLat(data.lat);
+            setLong(data.long);
+          })
+          .catch(err => console.error(err));
+        }}
+        title={isDisplayed? `latitude: ${lat}, longitude: ${long}` : "click to see the ISS location"}
+        >
       </Button>
     </View>
   );
@@ -39,3 +39,29 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+/*
+const marker = L.marker([0, 0], { icon: issIcon }).addTo(mymap);
+
+      const api_url = 'https://api.wheretheiss.at/v1/satellites/25544';
+
+      let firstTime = true;
+
+      async function getISS() {
+        const response = await fetch(api_url);
+        const data = await response.json();
+        const { latitude, longitude } = data;
+
+        marker.setLatLng([latitude, longitude]);
+        if (firstTime) {
+          mymap.setView([latitude, longitude], 2);
+          firstTime = false;
+        }
+        document.getElementById('lat').textContent = latitude.toFixed(2);
+        document.getElementById('lon').textContent = longitude.toFixed(2);
+      }
+
+      getISS();
+
+      setInterval(getISS, 1000);
+*/
