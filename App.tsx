@@ -1,17 +1,16 @@
-import { StatusBar } from 'expo-status-bar';
+//import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
-import { Header } from 'react-native/Libraries/NewAppScreen';
-import { getIss } from './api/iss_api';
+import { Button, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { getIss } from './app/api/iss_api';
+import Infobar from './app/components/infobar';
 
 // Transforming this function into an async function gives an error!
 export default function App() {
-  
+
   //const [isDisplayed, setIsDisplayed] = useState(false);
   const [lat, setLat] = useState(0);
   const [long, setLong] = useState(0);
-  const getData = () => {
-    //setIsDisplayed(true);
+  const handleOnPress = () => {
     getIss()
     .then(data => {
       setLat(data.lat);
@@ -19,62 +18,59 @@ export default function App() {
     })
     .catch(err => console.error(err));
   }
+  // This function allows the automatic trigering of the api
+  /*
   useEffect(() => {
-    setInterval(getData, 1000);
+    setInterval(getData, 3000);
   })
-  
+  */
   return (
-    <View style={styles.container}>
-      <Header>Welcome to the ISS location app</Header>
-      
-      <StatusBar style="auto" />
-      <Text>
-        Latitude
-      </Text>
-      <Text>
-        {lat}
-      </Text>
-      <Text>
-        Longitude
-      </Text>
-      <Text>
-        {long}
-      </Text>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <View  style={styles.textView}>
+        <Text
+        style={{
+          fontSize: 20,
+          color: 'white',
+          fontWeight: 'bold',
+        }}>
+          Welcome to the ISS location app click on the button below to sync the ISS location
+        </Text>
+      </View>
+      <View style={styles.buttonView}>
+        <Button
+          color="dodgerblue"
+          title="Synchronize"
+          onPress={handleOnPress}/>
+      </View>
+      <Infobar
+        name="Latitude"
+        value={lat}/>
+      <Infobar
+        name="Longitude"
+        value={long}/>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: 'grey',
+    //alignItems: 'center',
+    //justifyContent: 'center',
   },
+  textView: {
+    fontSize: 20,
+    flexDirection: 'row',
+    marginLeft: 10,
+    marginRight: 10,
+    top: 50,
+  },
+  buttonView: {
+    //position: 'absolute',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 0.5,
+  }
 });
-
-/*
-const marker = L.marker([0, 0], { icon: issIcon }).addTo(mymap);
-
-      const api_url = 'https://api.wheretheiss.at/v1/satellites/25544';
-
-      let firstTime = true;
-
-      async function getISS() {
-        const response = await fetch(api_url);
-        const data = await response.json();
-        const { latitude, longitude } = data;
-
-        marker.setLatLng([latitude, longitude]);
-        if (firstTime) {
-          mymap.setView([latitude, longitude], 2);
-          firstTime = false;
-        }
-        document.getElementById('lat').textContent = latitude.toFixed(2);
-        document.getElementById('lon').textContent = longitude.toFixed(2);
-      }
-
-      getISS();
-
-      setInterval(getISS, 1000);
-*/
