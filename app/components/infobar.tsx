@@ -21,8 +21,8 @@ const Infobar: React.FC<Props> = (props)=> {
 
 const styles = StyleSheet.create({
     container: {
-        //flex: 1,
         bottom: 40,
+        alignItems: 'center',
     },
 
     title: {
@@ -34,20 +34,18 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 10,
         borderBottomRightRadius: 10,
         color: 'black',
-        //flex: 1,
         fontSize: 20,
         fontWeight: 'bold',
         padding: 3,
-        width: '60%',
-        left: 30,
+        width: '40%',
+        alignItems: 'center',
     },
 
     value: {
         fontSize: 16,
         backgroundColor: 'grey',
         color: 'white',
-        left: 30,
-        //flex: 1,
+        alignItems: 'center',
     }
 })
 
